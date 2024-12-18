@@ -1,0 +1,508 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Penilaian Pembinaan</title>
+    <link rel="stylesheet" href="stylehasil.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <!-- DataTables -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+</head>
+
+<body class="body">
+
+    <div class="headerhasil animate_animated animate_backInDown">
+        <h1 class="h1">Daftar Penilaian Pembinaan</h1>
+        <nav class="navbar navbar-expand-lg navbar-light bg-light">
+            <div class="container-fluid">
+                <a class="navbar-brand" href=""></a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav"
+                    aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+                <div class="collapse navbar-collapse" id="navbarNav">
+                    <ul class="navbar-nav animate_animated animate_backInLeft">
+                        <li class="nav-item">
+                            <a class="nav-link" href="penginputan.html">Input Penilaian</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="#">Daftar Penilaian</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Home</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#" onclick="logout()">Logout</a>
+                        </li>                     
+                    </ul>
+                </div>
+            </div>
+        </nav>
+    </div>
+    <!-- Tambahkan form filter di atas tabel -->
+    <div class="filter-container">
+        <h3 class="h3">Filter Data</h3>
+        <form>
+            <div class="form-group">
+                <label for="start-date">Tanggal Mulai:</label>
+                <input type="date" id="start-date" name="start-date" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="end-date">Tanggal Akhir:</label>
+                <input type="date" id="end-date" name="end-date" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="filter-bidang" class="form-label">Bidang yang dituju</label>
+                <select type="text" class="form-control" id="filter-bidang" required>
+                    <option value="">Pilih</option>
+                    <option value="Pengembangan dan Supervisi Kepegawaian">Pengembangan dan Supervisi Kepegawaian
+                    </option>
+                    <option value="Tata Usaha">Tata Usaha</option>
+                    <option value="Pengangkatan dan Pensiun">Pengangkatan dan Pensiun</option>
+                    <option value="Mutasi dan Status Kepegawaian">Mutasi dan Status Kepegawaian</option>
+                    <option value="Informasi Kepegawaian">Informasi Kepegawaian</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="applyFilters()">Terapkan Filter</button>
+            <button type="button" class="btn btn-secondary" onclick="resetFilters()">Reset Filter</button>
+        </form>
+    </div>
+    <!-- Tambahkan tombol Print -->
+    <button type="button" class="btn btn-info" onclick="printData()">Print</button>
+
+    <!-- <div class="table-container">
+        <h2 class="h2">Daftar Penilaian Pembinaan</h2>
+        <table class="table">
+            <thead>
+                <tr class="th">
+                    <th>Tanggal</th>
+                    <th>Bidang Yang Dituju</th>
+                    <th>Gender</th>
+                    <th>Pendidikan</th>
+                    <th>Jabatan</th>
+                    <th>Instansi Asal</th>
+                    <th>Kegiatan</th>
+                    <th>Tempat</th>
+                    <th>Narasumber</th>
+                    <th>1.Layanan Pembinaan</th>
+                    <th>2.Waktu Pelaksanaan</th>
+                    <th>3.Kesempatan Feedback</th>
+                    <th>4.Pembiayaan yang Berlaku</th>
+                    <th>5.Efektivitas Materi</th>
+                    <th>6.Narasumber inovatif dan Eksklusif</th>
+                    <th>7.Perilaku Narasumber</th>
+                    <th>8.Feedback Responden</th>
+                    <th>9.Kenyamanan Saat Pembinaan</th>
+                    <th>Kritik Dan Saran</th>
+                    <th>Hapus Data</th>
+                </tr>
+            </thead>
+            <tbody id="evaluation-table-body">
+                Data akan ditambahkan di sini
+            </tbody>
+        </table>
+    </div> -->
+    
+    <div class="table-container">
+        <h2 class="h2">Daftar Penilaian Pembinaan</h2>
+        <table class="table" id="evaluation-table">
+            <thead>
+                <tr class="th">
+                    <th>Tanggal</th>
+                    <th>Bidang Yang Dituju</th>
+                    <th>Gender</th>
+                    <th>Pendidikan</th>
+                    <th>Jabatan</th>
+                    <th>Instansi Asal</th>
+                    <th>Kegiatan</th>
+                    <th>Tempat</th>
+                    <th>Narasumber</th>
+                    <th>1.Layanan Pembinaan</th>
+                    <th>2.Waktu Pelaksanaan</th>
+                    <th>3.Kesempatan Feedback</th>
+                    <th>4.Pembiayaan yang Berlaku</th>
+                    <th>5.Efektivitas Materi</th>
+                    <th>6.Narasumber inovatif dan Eksklusif</th>
+                    <th>7.Perilaku Narasumber</th>
+                    <th>8.Feedback Responden</th>
+                    <th>9.Kenyamanan Saat Pembinaan</th>
+                    <th>Kritik Dan Saran</th>
+                    <th>Hapus Data</th>
+                </tr>
+            </thead>
+            <tbody id="evaluation-table-body">
+                <!-- Data akan ditambahkan di sini -->
+            </tbody>
+        </table>
+    </div>
+    
+    <div class="container mt-5">
+        <h4 class="h4">Struktur Penilaian</h4>
+        <table class="table-bordered">
+            <thead>
+                <tr class="tr">
+                    <th>Aspek Penilaian</th>
+                    <th>1. Layanan Pembinaan</th>
+                    <th>2. Waktu Pelaksanaan</th>
+                    <th>3. Kesempatan Feedback</th>
+                    <th>4. Pembiayaan yang Berlaku</th>
+                    <th>5. Efektivitas Materi</th>
+                    <th>6. Narasumber Inovatif dan Eksklusif</th>
+                    <th>7. Perilaku Narasumber</th>
+                    <th>8. Feedback Responden</th>
+                    <th>9. Kenyamanan Saat Pembinaan</th>
+                </tr>
+            </thead>
+            <tbody id="average-score-body">
+                <tr class="tr">
+                    <td>JUMLAH NILAI</td>
+                    <td id="jumlah1"></td>
+                    <td id="jumlah2"></td>
+                    <td id="jumlah3"></td>
+                    <td id="jumlah4"></td>
+                    <td id="jumlah5"></td>
+                    <td id="jumlah6"></td>
+                    <td id="jumlah7"></td>
+                    <td id="jumlah8"></td>
+                    <td id="jumlah9"></td>
+                </tr>
+                <tr class="tr">
+                    <td>AVERAGE</td>
+                    <td id="average1"></td>
+                    <td id="average2"></td>
+                    <td id="average3"></td>
+                    <td id="average4"></td>
+                    <td id="average5"></td>
+                    <td id="average6"></td>
+                    <td id="average7"></td>
+                    <td id="average8"></td>
+                    <td id="average9"></td>
+                </tr>
+                <tr class="tr">
+                    <td>SKM</td>
+                    <td id="skm1"></td>
+                    <td id="skm2"></td>
+                    <td id="skm3"></td>
+                    <td id="skm4"></td>
+                    <td id="skm5"></td>
+                    <td id="skm6"></td>
+                    <td id="skm7"></td>
+                    <td id="skm8"></td>
+                    <td id="skm9"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <script>
+        // Periksa status autentikasi
+        if (sessionStorage.getItem('isAdmin') !== 'true') {
+            window.location.href = '/login'; // Redirect ke halaman login jika tidak terautentikasi
+        }
+    </script>
+ 
+    <!-- <script>
+        // Ambil data dari localStorage
+        var evaluations = JSON.parse(localStorage.getItem('evaluations')) || [];
+
+        // Fungsi untuk menghitung total skor
+        function calculateScore(evaluation) {
+            // Menjumlahkan semua skor dalam array evaluation.scores
+            var totalScore = evaluation.scores.reduce((total, score) => {
+                return total + (typeof score === 'number' && !isNaN(score) ? score : 0);
+            }, 0);
+
+            return totalScore; // Mengembalikan total skor
+        }
+
+        // Fungsi untuk menghitung kategori skor
+        function getScoreCategory(score) {
+            if (score >= 9 && score <= 15) {
+                return "Buruk";
+            } else if (score > 15 && score <= 22) {
+                return "Cukup";
+            } else if (score > 22 && score <= 29) {
+                return "Baik";
+            } else if (score > 29 && score <= 36) {
+                return "Sangat Baik";
+            }
+        }
+
+        // Fungsi untuk menampilkan data
+        function displayData(data) {
+            var tableBody = document.getElementById('evaluation-table-body');
+            tableBody.innerHTML = ''; // Hapus semua baris sebelumnya
+
+            data.forEach(function (evaluation, index) {
+                var numericScore = calculateScore(evaluation); // Hitung skor numerik
+                var scoreCategory = getScoreCategory(numericScore); // Dapatkan kategori berdasarkan skor
+
+                var row = document.createElement('tr');
+                row.innerHTML =
+                    '<td>' + (evaluation.date || '-') + '</td>' +
+                    '<td>' + (evaluation.bidang || '-') + '</td>' +
+                    '<td>' + (evaluation.gender || '-') + '</td>' +
+                    '<td>' + (evaluation.education || '-') + '</td>' +
+                    '<td>' + (evaluation.position || '-') + '</td>' +
+                    '<td>' + (evaluation.instansi || '-') + '</td>' +
+                    '<td>' + (evaluation.kegiatan || '-') + '</td>' +
+                    '<td>' + (evaluation.tempat || '-') + '</td>' +
+                    '<td>' + (evaluation.narasumber || '-') + '</td>' +
+                    '<td>' + (evaluation.scores[0] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[1] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[2] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[3] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[4] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[5] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[6] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[7] || 0) + '</td>' +
+                    '<td>' + (evaluation.scores[8] || 0) + '</td>' +
+                    '<td>' + (evaluation.kritik || '-') + '</td>' +
+                    '<td><button class="btn btn-danger btn-sm" onclick="deleteEvaluation(' + index + ')">Hapus</button></td>';
+                tableBody.appendChild(row);
+            });
+
+        }
+
+        // Fungsi untuk menerapkan filter
+        function applyFilters() {
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+            var filterBidang = document.getElementById('filter-bidang').value.toLowerCase();
+
+            var filteredEvaluations = evaluations.filter(function (evaluation) {
+                var evaluationDate = new Date(evaluation.date);
+                var startDateObj = new Date(startDate);
+                var endDateObj = new Date(endDate);
+
+                var matchDate = evaluationDate >= startDateObj && evaluationDate <= endDateObj;
+                var matchBidang = filterBidang ? evaluation.bidang.toLowerCase().includes(filterBidang) : true;
+                return matchDate && matchBidang;
+            });
+
+            displayData(filteredEvaluations);
+        }
+
+        // Fungsi untuk mencetak data yang ada di tabel saat ini
+        function printData() {
+            const tableContainer = document.querySelector('.table-container');
+            const scoreTable = document.querySelector('.container.mt-5').outerHTML;
+
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write(`
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css">
+        <style>
+            @media print {
+                body { font-size: 10px; color: #000; }
+                h1 { font-size: 14px; margin: 20px 0; text-align: center; width: 100%; }
+                .table-container { width: 100%; margin: 0; padding: 0; }
+                table { width: 100%; border-collapse: collapse; font-size: 10px; margin-bottom: 20px; }
+                th, td { word-wrap: break-word; text-align: center; padding: 5px; border: 1px solid #ddd; }
+                thead { background-color: #f2f2f2; }
+                .container.mt-5 { margin-top: 20px; }
+                tr:nth-child(even) { background-color: #f9f9f9; }
+                th:last-child, td:last-child { display: none; }
+                .no-print { display: none; }
+            }
+        </style>
+        <h1>Hasil Penilaian Pembinaan</h1>
+        ${tableContainer.outerHTML}
+        ${scoreTable}
+    `);
+            printWindow.document.close();
+
+            printWindow.focus();
+            printWindow.print();
+            printWindow.close();
+        }
+
+
+        // Fungsi untuk mereset filter
+        function resetFilters() {
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            document.getElementById('filter-bidang').value = '';
+            displayData(evaluations); // Tampilkan semua data tanpa filter
+        }
+
+        // Fungsi untuk menghapus data
+        function deleteEvaluation(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                evaluations.splice(index, 1);
+                localStorage.setItem('evaluations', JSON.stringify(evaluations));
+                displayData(evaluations);
+            }
+        }
+
+        // Tampilkan semua data pada awalnya
+        displayData(evaluations);
+
+        function logout() {
+           // Tampilkan SweetAlert untuk konfirmasi logout
+           Swal.fire({
+               title: 'Konfirmasi Logout',
+               text: 'Apakah Anda yakin ingin keluar?',
+               icon: 'warning',
+               showCancelButton: true,
+               confirmButtonText: 'Ya, Logout',
+               cancelButtonText: 'Batal'
+           }).then((result) => {
+               if (result.isConfirmed) {
+                   // Hapus status autentikasi
+                   sessionStorage.removeItem('isAdmin'); // Hapus status autentikasi
+                   // Redirect ke halaman login
+                   window.location.href = '/login';
+               }
+           });
+       }
+
+        // Function to calculate Jumlah Nilai, Average, and SKM
+        function calculateScores() {
+            const table = document.querySelectorAll('#evaluation-table-body tr');
+            const totalScores = Array(9).fill(0);
+            let validRows = 0;
+
+            table.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowHasValues = false;
+                for (let i = 9; i <= 17; i++) { // Columns 10-18 (index 9-17) contain the scores
+                    const value = parseInt(cells[i].innerText) || 0;
+                    if (value > 0) rowHasValues = true;
+                    totalScores[i - 9] += value;
+                }
+                if (rowHasValues) validRows++;
+            });
+
+            const averages = totalScores.map(score => validRows > 0 ? score / validRows : 0);
+            // Modify the skms calculation here
+            const skms = averages.map(average => average * 0.11); // Each average multiplied by 0.11
+
+            return { totalScores, averages, skms, validRows };
+        }
+
+        // Function to display calculation results in the table
+        function displayScores() {
+            const { totalScores, averages, skms, validRows } = calculateScores();
+
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById(`jumlah${i}`).innerText = totalScores[i - 1].toFixed();
+                document.getElementById(`average${i}`).innerText = averages[i - 1].toFixed(2);
+                document.getElementById(`skm${i}`).innerText = skms[i - 1].toFixed(2) + '%';
+            }
+
+            // Calculate and display overall IKM
+            const overallIKM = skms.reduce((sum, skm) => sum + skm, 0) / 9;
+            const ikmElement = document.querySelector('#average-score-body tr:last-child td');
+            //ikmElement.innerText = `Overall IKM: ${overallIKM.toFixed(2)}%`;
+        }
+
+        // Call displayScores when the document is ready and after any data changes
+        document.addEventListener('DOMContentLoaded', displayScores);
+        // Also call displayScores after applying filters or resetting filters
+        function applyFilters() {
+            // ... existing filter code ...
+            displayData(filteredEvaluations);
+            displayScores(); // Add this line
+        }
+
+        function resetFilters() {
+            // ... existing reset code ...
+            displayData(evaluations);
+            displayScores(); // Add this line
+        }
+
+        // Call displayScores after adding or deleting evaluations
+        function deleteEvaluation(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                evaluations.splice(index, 1);
+                localStorage.setItem('evaluations', JSON.stringify(evaluations));
+                displayData(evaluations);
+                displayScores(); // Add this line
+            }
+        }
+
+    </script> -->
+
+    <script>
+        $(document).ready(function() {
+            // Ambil data dari API
+            $.ajax({
+                url: '/api/evaluations',
+                method: 'GET',
+                success: function(data) {
+                    displayData(data);
+                    $('#evaluation-table').DataTable(); // Inisialisasi DataTable
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err);
+                }
+            });
+        });
+
+        // Fungsi untuk menampilkan data
+        function displayData(data) {
+            var tableBody = $('#evaluation-table-body');
+            tableBody.empty(); // Hapus semua baris sebelumnya
+
+            data.forEach(function(evaluation, index) {
+                var row = `
+                    <tr>
+                        <td>${evaluation.date || '-'}</td>
+                        <td>${evaluation.bidang || '-'}</td>
+                        <td>${evaluation.gender || '-'}</td>
+                        <td>${evaluation.education || '-'}</td>
+                        <td>${evaluation.position || '-'}</td>
+                        <td>${evaluation.instansi || '-'}</td>
+                        <td>${evaluation.kegiatan || '-'}</td>
+                        <td>${evaluation.tempat || '-'}</td>
+                        <td>${evaluation.narasumber || '-'}</td>
+                        <td>${evaluation.scores[0] || 0}</td>
+                        <td>${evaluation.scores[1] || 0}</td>
+                        <td>${evaluation.scores[2] || 0}</td>
+                        <td>${evaluation.scores[3] || 0}</td>
+                        <td>${evaluation.scores[4] || 0}</td>
+                        <td>${evaluation.scores[5] || 0}</td>
+                        <td>${evaluation.scores[6] || 0}</td>
+                        <td>${evaluation.scores[7] || 0}</td>
+                        <td>${evaluation.scores[8] || 0}</td>
+                        <td>${evaluation.kritik || '-'}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteEvaluation(${index})">Hapus</button></td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+        }
+
+        function logout() {
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sessionStorage.removeItem('isAdmin'); // Hapus status autentikasi
+                    window.location.href = '/login'; // Redirect ke halaman login
+                }
+            });
+        }
+    </script>
+
+    
+
+    <script src="./app.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+    <!-- DataTables -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+</body>
+
+</html>

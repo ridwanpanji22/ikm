@@ -1,0 +1,47 @@
+body {
+    background-color: #f8f9fa;
+    margin: 0; /* Hapus margin default */
+}
+
+.container {
+    height: 100vh; /* Tinggi penuh viewport */
+}
+
+.card {
+    border: none;
+    border-radius: 15px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    width: 100%; /* Atur lebar card */
+    height: 100%;
+    /* max-width: 900px; Maksimal lebar card */
+}
+
+.survey-card {
+    height: auto; /* Membuat card survey mengisi tinggi kolom */
+}
+
+.card-title {
+    font-weight: bold;
+    color: #dc3545; /* Warna merah */
+    font-size: 4.50rem; /* Ukuran font lebih besar */
+}
+
+.card-text {
+    color: #343a40; /* Warna teks */
+    font-size: 2.50rem; /* Ukuran font lebih besar */
+}
+
+.btn-primary {
+    background-color: #dc3545; /* Warna merah */
+    border: none;
+    font-size: 1.50rem; /* Ukuran font tombol */
+}
+
+.btn-primary:hover {
+    background-color: #c82333; /* Warna merah lebih gelap saat hover */
+}
+
+.img-fluid {
+    max-height: 600px; /* Atur tinggi maksimal gambar */
+    object-fit: contain; /* Memastikan gambar tidak terdistorsi */
+}

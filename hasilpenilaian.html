@@ -1,0 +1,824 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daftar Penilaian Indeks Kepuasan Masyarakat</title>
+    <link rel="stylesheet" href="stylehasil.css">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
+    <link rel="stylesheet" href="https://cdn.datatables.net/1.13.4/css/jquery.dataTables.min.css">
+</head>
+
+<body class="body">
+
+    <div class="headerhasil animate_animated animate_backInDown">
+        <h1 class="h1">Daftar Penilaian Indeks Kepuasan Masyarakat</h1>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-light bg-light">
+        <div class="container-fluid">
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto"> <!-- me-auto untuk menggeser ke kiri -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="/dashboard"><b>Dashboard</b></a>  
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="/admin"><b>Menu Filter</b></a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav"> <!-- Navbar untuk Logout di sebelah kanan -->
+                    <li class="nav-item">
+                        <a class="nav-link" href="#" onclick="logout()"><b>Logout</b></a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="filter-container">
+        <h3 class="h3">Filter Data</h3>
+        <form>
+            <div class="form-group">
+                <label for="start-date">Tanggal Mulai:</label>
+                <input type="date" id="start-date" name="start-date" class="form-control">
+            </div>
+            <div class="form-group">
+                <label for="end-date">Tanggal Akhir:</label>
+                <input type="date" id="end-date" name="end-date" class="form-control">
+            </div>
+            <div class="mb-3">
+                <label for="filter-bidang" class="form-label">Bidang yang dituju</label>
+                <select type="text" class="form-control" id="filter-bidang" required>
+                    <option value="">Pilih</option>
+                    <option value="Pengembangan dan Supervisi Kepegawaian">Pengembangan dan Supervisi Kepegawaian</option>
+                    <option value="Tata Usaha">Tata Usaha</option>
+                    <option value="Pengangkatan dan Pensiun">Pengangkatan dan Pensiun</option>
+                    <option value="Mutasi dan Status Kepegawaian">Mutasi dan Status Kepegawaian</option>
+                    <option value="Informasi Kepegawaian">Informasi Kepegawaian</option>
+                </select>
+            </div>
+            <button type="button" class="btn btn-primary" onclick="applyFilters()">Terapkan Filter</button>
+            <button type="button" class="btn btn-secondary" onclick="resetFilters()">Reset Filter</button>
+        </form>
+    </div>
+
+    <button type="button" class="btn btn-info" onclick="printData()">Print</button>
+
+    <div class="table-container">
+        <h2 class="h2">Daftar Penilaian Pembinaan</h2>
+        <table class="table" id="evaluation-table">
+            <thead>
+                <tr class="th">
+                    <th>Tanggal</th>
+                    <th>Bidang Yang Dituju</th>
+                    <th>Gender</th>
+                    <th>Pendidikan</th>
+                    <th>Jabatan</th>
+                    <th>Instansi Asal</th>
+                    <th>Kegiatan</th>
+                    <th>Tempat</th>
+                    <th>Narasumber</th>
+                    <th>1.Layanan Pembinaan</th>
+                    <th>2.Waktu Pelaksanaan</th>
+                    <th>3.Kesempatan Feedback</th>
+                    <th>4.Pembiayaan yang Berlaku</th>
+                    <th>5.Efektivitas Materi</th>
+                    <th>6.Narasumber inovatif dan Eksklusif</th>
+                    <th>7.Perilaku Narasumber</th>
+                    <th>8.Feedback Responden</th>
+                    <th>9.Kenyamanan Saat Pembinaan</th>
+                    <th>Kritik Dan Saran</th>
+                    <th>Hapus Data</th>
+                </tr>
+            </thead>
+            <tbody id="evaluation-table-body">
+                <!-- Data akan ditambahkan di sini -->
+            </tbody>
+        </table>
+    </div>
+
+    <div class="container mt-5">
+        <h4 class="h4">Struktur Penilaian</h4>
+        <table class="table-bordered">
+            <thead>
+                <tr class="tr">
+                    <th>Aspek Penilaian</th>
+                    <th>1. Layanan Pembinaan</th>
+                    <th>2. Waktu Pelaksanaan</th>
+                    <th>3. Kesempatan Feedback</th>
+                    <th>4. Pembiayaan yang Berlaku</th>
+                    <th>5. Efektivitas Materi</th>
+                    <th>6. Narasumber Inovatif dan Eksklusif</th>
+                    <th>7. Perilaku Narasumber</th>
+                    <th>8. Feedback Responden</th>
+                    <th>9. Kenyamanan Saat Pembinaan</th>
+                </tr>
+            </thead>
+            <tbody id="average-score-body">
+                <tr class="tr">
+                    <td>JUMLAH NILAI</td>
+                    <td id="jumlah1"></td>
+                    <td id="jumlah2"></td>
+                    <td id="jumlah3"></td>
+                    <td id="jumlah4"></td>
+                    <td id="jumlah5"></td>
+                    <td id="jumlah6"></td>
+                    <td id="jumlah7"></td>
+                    <td id="jumlah8"></td>
+                    <td id="jumlah9"></td>
+                </tr>
+                <tr class="tr">
+                    <td>AVERAGE</td>
+                    <td id="average1"></td>
+                    <td id="average2"></td>
+                    <td id="average3"></td>
+                    <td id="average4"></td>
+                    <td id="average5"></td>
+                    <td id="average6"></td>
+                    <td id="average7"></td>
+                    <td id="average8"></td>
+                    <td id="average9"></td>
+                </tr>
+                <tr class="tr">
+                    <td>SKM</td>
+                    <td id="skm1"></td>
+                    <td id="skm2"></td>
+                    <td id="skm3"></td>
+                    <td id="skm4"></td>
+                    <td id="skm5"></td>
+                    <td id="skm6"></td>
+                    <td id="skm7"></td>
+                    <td id="skm8"></td>
+                    <td id="skm9"></td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+
+    <!-- jQuery -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <!-- DataTables -->
+    <script src="https://cdn.datatables.net/1.13.4/js/jquery.dataTables.min.js"></script>
+    <!-- SweetAlert -->
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <!-- Bootstrap -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+
+    <!-- <script>
+        // Periksa status autentikasi
+        if (sessionStorage.getItem('isAdmin') !== 'true') {
+            window.location.href = '/login'; // Redirect ke halaman login jika tidak terautentikasi
+        }
+
+        let evaluations = []; // Deklarasikan variabel evaluations di luar fungsi
+
+        $(document).ready(function() {
+            // Ambil data dari API
+            $.ajax({
+                url: '/api/evaluations',
+                method: 'GET',
+                success: function(data) {
+                    evaluations = data; // Simpan data ke variabel evaluations
+                    displayData(evaluations); // Tampilkan data
+                    $('#evaluation-table').DataTable(); // Inisialisasi DataTable
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err);
+                }
+            });
+        });
+
+        // Fungsi untuk menampilkan data
+        function displayData(data) {
+            var tableBody = $('#evaluation-table-body');
+            tableBody.empty(); // Hapus semua baris sebelumnya
+
+            data.forEach(function(evaluation, index) {
+                // Pastikan scores adalah array dan memiliki panjang yang sesuai
+                const scores = Array.isArray(evaluation.scores) ? evaluation.scores : Array(9).fill(0);
+
+                var row = `
+                    <tr>
+                        <td>${evaluation.date || '-'}</td>
+                        <td>${evaluation.bidang || '-'}</td>
+                        <td>${evaluation.gender || '-'}</td>
+                        <td>${evaluation.education || '-'}</td>
+                        <td>${evaluation.position || '-'}</td>
+                        <td>${evaluation.instansi || '-'}</td>
+                        <td>${evaluation.kegiatan || '-'}</td>
+                        <td>${evaluation.tempat || '-'}</td>
+                        <td>${evaluation.narasumber || '-'}</td>
+                        <td>${scores[0] || 0}</td>
+                        <td>${scores[1] || 0}</td>
+                        <td>${scores[2] || 0}</td>
+                        <td>${scores[3] || 0}</td>
+                        <td>${scores[4] || 0}</td>
+                        <td>${scores[5] || 0}</td>
+                        <td>${scores[6] || 0}</td>
+                        <td>${scores[7] || 0}</td>
+                        <td>${scores[8] || 0}</td>
+                        <td>${evaluation.kritik || '-'}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteEvaluation(${index})">Hapus</button></td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+
+            console.log('Evaluation:', evaluation); // Tambahkan ini untuk melihat data evaluation
+            console.log('Scores:', scores); // Tambahkan ini untuk melihat nilai scores
+
+            // Panggil displayScores setelah data ditampilkan
+            displayScores();
+        }
+
+        function displayScores() {
+            const { totalScores, averages, skms } = calculateScores();
+
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById(`jumlah${i}`).innerText = totalScores[i - 1].toFixed();
+                document.getElementById(`average${i}`).innerText = averages[i - 1].toFixed(2);
+                document.getElementById(`skm${i}`).innerText = skms[i - 1].toFixed(2) + '%';
+            }
+        }
+
+        function calculateScores() {
+            const table = document.querySelectorAll('#evaluation-table-body tr');
+            const totalScores = Array(9).fill(0);
+            let validRows = 0;
+
+            table.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowHasValues = false;
+                for (let i = 9; i <= 17; i++) { // Columns 10-18 (index 9-17) contain the scores
+                    const value = parseInt(cells[i].innerText) || 0;
+                    if (value > 0) rowHasValues = true;
+                    totalScores[i - 9] += value;
+                }
+                if (rowHasValues) validRows++;
+            });
+
+            const averages = totalScores.map(score => validRows > 0 ? score / validRows : 0);
+            const skms = averages.map(average => average * 0.11); // Each average multiplied by 0.11
+
+            return { totalScores, averages, skms };
+        }
+
+        function logout() {
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sessionStorage.removeItem('isAdmin'); // Hapus status autentikasi
+                    window.location.href = '/login'; // Redirect ke halaman login
+                }
+            });
+        }
+
+        // Fungsi untuk menerapkan filter
+        function applyFilters() {
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+            var filterBidang = document.getElementById('filter-bidang').value.toLowerCase();
+
+            var filteredEvaluations = evaluations.filter(function (evaluation) {
+                var evaluationDate = new Date(evaluation.date);
+                var startDateObj = new Date(startDate);
+                var endDateObj = new Date(endDate);
+
+                var matchDate = evaluationDate >= startDateObj && evaluationDate <= endDateObj;
+                var matchBidang = filterBidang ? evaluation.bidang.toLowerCase().includes(filterBidang) : true;
+                return matchDate && matchBidang;
+            });
+
+            displayData(filteredEvaluations);
+        }
+
+        // Fungsi untuk mereset filter
+        function resetFilters() {
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            document.getElementById('filter-bidang').value = '';
+            displayData(evaluations); // Tampilkan semua data tanpa filter
+        }
+
+        // Fungsi untuk menghapus data
+        function deleteEvaluation(index) {
+            if (confirm('Apakah Anda yakin ingin menghapus data ini?')) {
+                evaluations.splice(index, 1);
+                localStorage.setItem('evaluations', JSON.stringify(evaluations));
+                displayData(evaluations);
+            }
+        }
+
+        // Tampilkan semua data pada awalnya
+        displayData(evaluations);
+    </script> -->
+
+    <!-- <script>
+        // Periksa status autentikasi
+        if (sessionStorage.getItem('isAdmin') !== 'true') {
+            window.location.href = '/login'; // Redirect ke halaman login jika tidak terautentikasi
+        }
+    
+        let evaluations = []; // Deklarasikan variabel evaluations di luar fungsi
+    
+        $(document).ready(function() {
+            // Ambil data dari API
+            $.ajax({
+                url: '/api/evaluations',
+                method: 'GET',
+                success: function(data) {
+                    evaluations = data; // Simpan data ke variabel evaluations
+                    displayData(evaluations); // Tampilkan data
+                    $('#evaluation-table').DataTable(); // Inisialisasi DataTable
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err);
+                }
+            });
+        });
+
+        
+    
+        // Fungsi untuk menampilkan data
+        function displayData(data) {
+            var tableBody = $('#evaluation-table-body');
+            tableBody.empty(); // Hapus semua baris sebelumnya
+    
+            data.forEach(function(evaluation, index) {
+                // Ambil nilai scores dari properti score1 hingga score9
+                const scores = [
+                    evaluation.score1 || 0,
+                    evaluation.score2 || 0,
+                    evaluation.score3 || 0,
+                    evaluation.score4 || 0,
+                    evaluation.score5 || 0,
+                    evaluation.score6 || 0,
+                    evaluation.score7 || 0,
+                    evaluation.score8 || 0,
+                    evaluation.score9 || 0
+                ];
+    
+                var row = `
+                    <tr>
+                        <td>${evaluation.date || '-'}</td>
+                        <td>${evaluation.bidang || '-'}</td>
+                        <td>${evaluation.gender || '-'}</td>
+                        <td>${evaluation.education || '-'}</td>
+                        <td>${evaluation.position || '-'}</td>
+                        <td>${evaluation.instansi || '-'}</td>
+                        <td>${evaluation.kegiatan || '-'}</td>
+                        <td>${evaluation.tempat || '-'}</td>
+                        <td>${evaluation.narasumber || '-'}</td>
+                        <td>${scores[0]}</td>
+                        <td>${scores[1]}</td>
+                        <td>${scores[2]}</td>
+                        <td>${scores[3]}</td>
+                        <td>${scores[4]}</td>
+                        <td>${scores[5]}</td>
+                        <td>${scores[6]}</td>
+                        <td>${scores[7]}</td>
+                        <td>${scores[8]}</td>
+                        <td>${evaluation.kritik || '-'}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteEvaluation(${index})">Hapus</button></td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+    
+            // Panggil displayScores setelah data ditampilkan
+            displayScores();
+        }
+    
+        function displayScores() {
+            const { totalScores, averages, skms } = calculateScores();
+    
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById(`jumlah${i}`).innerText = totalScores[i - 1].toFixed();
+                document.getElementById(`average${i}`).innerText = averages[i - 1].toFixed(2);
+                document.getElementById(`skm${i}`).innerText = skms[i - 1].toFixed(2) + '%';
+            }
+        }
+    
+        function calculateScores() {
+            const table = document.querySelectorAll('#evaluation-table-body tr');
+            const totalScores = Array(9).fill(0);
+            let validRows = 0;
+    
+            table.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowHasValues = false;
+                for (let i = 9; i <= 17; i++) { // Columns 10-18 (index 9-17) contain the scores
+                    const value = parseInt(cells[i].innerText) || 0;
+                    if (value > 0) rowHasValues = true;
+                    totalScores[i - 9] += value;
+                }
+                if (rowHasValues) validRows++;
+            });
+    
+            const averages = totalScores.map(score => validRows > 0 ? score / validRows : 0);
+            const skms = averages.map(average => average * 0.11); // Each average multiplied by 0.11
+    
+            return { totalScores, averages, skms };
+        }
+    
+        function logout() {
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sessionStorage.removeItem('isAdmin'); // Hapus status autentikasi
+                    window.location.href = '/login'; // Redirect ke halaman login
+                }
+            });
+        }
+    
+        // Fungsi untuk menerapkan filter
+        function applyFilters() {
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+            var filterBidang = document.getElementById('filter-bidang').value.toLowerCase();
+    
+            var filteredEvaluations = evaluations.filter(function (evaluation) {
+                var evaluationDate = new Date(evaluation.date);
+                var startDateObj = new Date(startDate);
+                var endDateObj = new Date(endDate);
+    
+                var matchDate = evaluationDate >= startDateObj && evaluationDate <= endDateObj;
+                var matchBidang = filterBidang ? evaluation.bidang.toLowerCase().includes(filterBidang) : true;
+                return matchDate && matchBidang;
+            });
+    
+            displayData(filteredEvaluations);
+        }
+    
+        // Fungsi untuk mereset filter
+        function resetFilters() {
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            document.getElementById('filter-bidang').value = '';
+            displayData(evaluations); // Tampilkan semua data tanpa filter
+        }
+    
+        // Fungsi untuk menghapus data
+        function deleteEvaluation(index) {
+            const evaluationId = evaluations[index].id; // Ambil ID dari evaluasi yang akan dihapus
+
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: 'Apakah Anda yakin ingin menghapus data ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Kirim permintaan DELETE ke API
+                    $.ajax({
+                        url: `/api/evaluations/${evaluationId}`, // Endpoint untuk menghapus data
+                        method: 'DELETE',
+                        success: function() {
+                            evaluations.splice(index, 1); // Hapus dari array evaluations
+                            displayData(evaluations); // Tampilkan data yang diperbarui
+                            displayScores(); // Perbarui skor
+                            Swal.fire('Terhapus!', 'Data telah dihapus.', 'success');
+                        },
+                        error: function(err) {
+                            console.error('Error deleting data:', err);
+                            Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+    
+        // Tampilkan semua data pada awalnya
+        displayData(evaluations);
+    </script> -->
+    
+    <script>
+        // Periksa status autentikasi
+        if (sessionStorage.getItem('isAdmin') !== 'true') {
+            window.location.href = '/login'; // Redirect ke halaman login jika tidak terautentikasi
+        }
+    
+        let evaluations = []; // Deklarasikan variabel evaluations di luar fungsi
+    
+        $(document).ready(function() {
+            // Ambil data dari API
+            $.ajax({
+                url: '/api/evaluations',
+                method: 'GET',
+                success: function(data) {
+                    evaluations = data; // Simpan data ke variabel evaluations
+                    displayData(evaluations); // Tampilkan data
+                    $('#evaluation-table').DataTable(); // Inisialisasi DataTable
+                },
+                error: function(err) {
+                    console.error('Error fetching data:', err);
+                }
+            });
+        });
+    
+        // Fungsi untuk memformat tanggal dari ISO ke format DD-MM-YYYY
+        function formatDate(isoDate) {
+            const date = new Date(isoDate);
+            const day = String(date.getDate()).padStart(2, '0'); // Menambahkan leading zero
+            const month = String(date.getMonth() + 1).padStart(2, '0'); // Bulan dimulai dari 0
+            const year = date.getFullYear();
+            return `${day}-${month}-${year}`; // Format DD-MM-YYYY
+        }
+    
+        // Fungsi untuk menampilkan data
+        function displayData(data) {
+            var tableBody = $('#evaluation-table-body');
+            tableBody.empty(); // Hapus semua baris sebelumnya
+    
+            data.forEach(function(evaluation, index) {
+                // Memformat tanggal menggunakan fungsi formatDate
+                const formattedDate = formatDate(evaluation.date);
+    
+                // Ambil nilai scores dari properti score1 hingga score9
+                const scores = [
+                    evaluation.score1 || 0,
+                    evaluation.score2 || 0,
+                    evaluation.score3 || 0,
+                    evaluation.score4 || 0,
+                    evaluation.score5 || 0,
+                    evaluation.score6 || 0,
+                    evaluation.score7 || 0,
+                    evaluation.score8 || 0,
+                    evaluation.score9 || 0
+                ];
+    
+                var row = `
+                    <tr>
+                        <td>${formattedDate || '-'}</td>
+                        <td>${evaluation.bidang || '-'}</td>
+                        <td>${evaluation.gender || '-'}</td>
+                        <td>${evaluation.education || '-'}</td>
+                        <td>${evaluation.position || '-'}</td>
+                        <td>${evaluation.instansi || '-'}</td>
+                        <td>${evaluation.kegiatan || '-'}</td>
+                        <td>${evaluation.tempat || '-'}</td>
+                        <td>${evaluation.narasumber || '-'}</td>
+                        <td>${scores[0]}</td>
+                        <td>${scores[1]}</td>
+                        <td>${scores[2]}</td>
+                        <td>${scores[3]}</td>
+                        <td>${scores[4]}</td>
+                        <td>${scores[5]}</td>
+                        <td>${scores[6]}</td>
+                        <td>${scores[7]}</td>
+                        <td>${scores[8]}</td>
+                        <td>${evaluation.kritik || '-'}</td>
+                        <td><button class="btn btn-danger btn-sm" onclick="deleteEvaluation(${index})">Hapus</button></td>
+                    </tr>
+                `;
+                tableBody.append(row);
+            });
+    
+            // Panggil displayScores setelah data ditampilkan
+            displayScores();
+        }
+    
+        function displayScores() {
+            const { totalScores, averages, skms } = calculateScores();
+    
+            for (let i = 1; i <= 9; i++) {
+                document.getElementById(`jumlah${i}`).innerText = totalScores[i - 1].toFixed();
+                document.getElementById(`average${i}`).innerText = averages[i - 1].toFixed(2);
+                document.getElementById(`skm${i}`).innerText = skms[i - 1].toFixed(2) + '%';
+            }
+        }
+    
+        function calculateScores() {
+            const table = document.querySelectorAll('#evaluation-table-body tr');
+            const totalScores = Array(9).fill(0);
+            let validRows = 0;
+    
+            table.forEach(row => {
+                const cells = row.querySelectorAll('td');
+                let rowHasValues = false;
+                for (let i = 9; i <= 17; i++) { // Columns 10-18 (index 9-17) contain the scores
+                    const value = parseInt(cells[i].innerText) || 0;
+                    if (value > 0) rowHasValues = true;
+                    totalScores[i - 9] += value;
+                }
+                if (rowHasValues) validRows++;
+            });
+    
+            const averages = totalScores.map(score => validRows > 0 ? score / validRows : 0);
+            const skms = averages.map(average => average * 0.11); // Each average multiplied by 0.11
+    
+            return { totalScores, averages, skms };
+        }
+    
+        function logout() {
+            Swal.fire({
+                title: 'Konfirmasi Logout',
+                text: 'Apakah Anda yakin ingin keluar?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Logout',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    sessionStorage.removeItem('isAdmin'); // Hapus status autentikasi
+                    window.location.href = '/login'; // Redirect ke halaman login
+                }
+            });
+        }
+    
+        // Fungsi untuk menerapkan filter
+        function applyFilters() {
+            var startDate = document.getElementById('start-date').value;
+            var endDate = document.getElementById('end-date').value;
+            var filterBidang = document.getElementById('filter-bidang').value.toLowerCase();
+    
+            var filteredEvaluations = evaluations.filter(function (evaluation) {
+                var evaluationDate = new Date(evaluation.date);
+                var startDateObj = new Date(startDate);
+                var endDateObj = new Date(endDate);
+    
+                var matchDate = evaluationDate >= startDateObj && evaluationDate <= endDateObj;
+                var matchBidang = filterBidang ? evaluation.bidang.toLowerCase().includes(filterBidang) : true;
+                return matchDate && matchBidang;
+            });
+    
+            displayData(filteredEvaluations);
+        }
+    
+        // Fungsi untuk mereset filter
+        function resetFilters() {
+            document.getElementById('start-date').value = '';
+            document.getElementById('end-date').value = '';
+            document.getElementById('filter-bidang').value = '';
+            displayData(evaluations); // Tampilkan semua data tanpa filter
+        }
+    
+        // Fungsi untuk menghapus data
+        function deleteEvaluation(index) {
+            const evaluationId = evaluations[index].id; // Ambil ID dari evaluasi yang akan dihapus
+    
+            Swal.fire({
+                title: 'Konfirmasi Hapus',
+                text: 'Apakah Anda yakin ingin menghapus data ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    // Kirim permintaan DELETE ke API
+                    $.ajax({
+                        url: `/api/evaluations/${evaluationId}`, // Endpoint untuk menghapus data
+                        method: 'DELETE',
+                        success: function() {
+                            evaluations.splice(index, 1); // Hapus dari array evaluations
+                            displayData(evaluations); // Tampilkan data yang diperbarui
+                            displayScores(); // Perbarui skor
+                            Swal.fire('Terhapus!', 'Data telah dihapus.', 'success');
+                        },
+                        error: function(err) {
+                            console.error('Error deleting data:', err);
+                            Swal.fire('Gagal!', 'Terjadi kesalahan saat menghapus data.', 'error');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Fungsi untuk mencetak data
+        function printData() {
+            const evaluationTableContents = document.getElementById('evaluation-table').outerHTML; // Ambil HTML tabel penilaian
+            const structureTableContents = document.getElementById('average-score-body').outerHTML; // Ambil HTML tabel struktur penilaian
+
+            // Buat jendela baru untuk mencetak
+            const printWindow = window.open('', '', 'height=600,width=800');
+            printWindow.document.write('<html><head><title>Print Evaluation</title>');
+            printWindow.document.write('<style>');
+            printWindow.document.write('table { border-collapse: collapse; width: 100%; margin-top: 20px; }');
+            printWindow.document.write('th, td { border: 1px solid black; padding: 8px; text-align: left; }');
+            printWindow.document.write('th { background-color: #f2f2f2; }'); // Gaya untuk header
+            printWindow.document.write('h1, h2 { text-align: center; }'); // Gaya untuk header judul
+            printWindow.document.write('@media print { .page-break { display: block; page-break-before: always; } }'); // CSS untuk pemisah halaman
+            printWindow.document.write('</style>');
+            printWindow.document.write('</head><body>');
+            
+            // Tambahkan header "Daftar Penilaian Pembinaan"
+            printWindow.document.write('<h1>Daftar Penilaian Pembinaan</h1>');
+
+            // Hapus header "Hapus Data" dan kolom data "Hapus"
+            const modifiedContents = evaluationTableContents
+                .replace(/<th[^>]*>Hapus Data<\/th>\s*/g, '') // Hapus header "Hapus Data"
+                .replace(/<td>\s*<button[^>]*>Hapus<\/button>\s*<\/td>\s*/g, ''); // Hapus kolom data "Hapus"
+
+            // Hapus kolom "Hapus" dari setiap baris
+            const rowsWithoutDelete = modifiedContents.replace(/<tr>(.*?)<td>\s*<button[^>]*>Hapus<\/button>\s*<\/td>(.*?)<\/tr>/g, '<tr>$1$2</tr>');
+
+            // Tulis konten tabel yang dimodifikasi ke jendela baru
+            printWindow.document.write(rowsWithoutDelete); 
+
+            // Tambahkan pemisah halaman
+            printWindow.document.write('<div class="page-break"></div>'); // Tambahkan pemisah halaman
+
+            // Tambahkan tabel "Struktur Penilaian" di halaman kedua
+            printWindow.document.write('<h2>Struktur Penilaian</h2>'); // Tambahkan judul untuk tabel struktur penilaian
+
+            // Tambahkan border dan gaya untuk tabel struktur penilaian
+            printWindow.document.write('<table class="table-bordered">'); // Mulai tabel
+            printWindow.document.write('<thead><tr><th>Aspek Penilaian</th><th>1. Layanan Pembinaan</th><th>2. Waktu Pelaksanaan</th><th>3. Kesempatan Feedback</th><th>4. Pembiayaan yang Berlaku</th><th>5. Efektivitas Materi</th><th>6. Narasumber Inovatif dan Eksklusif</th><th>7. Perilaku Narasumber</th><th>8. Feedback Responden</th><th>9. Kenyamanan Saat Pembinaan</th></tr></thead>');
+            printWindow.document.write('<tbody id="average-score-body">'); // Mulai body tabel
+
+            // Ambil nilai dari elemen yang sesuai
+            const jumlahValues = [
+                document.getElementById('jumlah1').innerText,
+                document.getElementById('jumlah2').innerText,
+                document.getElementById('jumlah3').innerText,
+                document.getElementById('jumlah4').innerText,
+                document.getElementById('jumlah5').innerText,
+                document.getElementById('jumlah6').innerText,
+                document.getElementById('jumlah7').innerText,
+                document.getElementById('jumlah8').innerText,
+                document.getElementById('jumlah9').innerText,
+            ];
+
+            const averageValues = [
+                document.getElementById('average1').innerText,
+                document.getElementById('average2').innerText,
+                document.getElementById('average3').innerText,
+                document.getElementById('average4').innerText,
+                document.getElementById('average5').innerText,
+                document.getElementById('average6').innerText,
+                document.getElementById('average7').innerText,
+                document.getElementById('average8').innerText,
+                document.getElementById('average9').innerText,
+            ];
+
+            const skmValues = [
+                document.getElementById('skm1').innerText,
+                document.getElementById('skm2').innerText,
+                document.getElementById('skm3').innerText,
+                document.getElementById('skm4').innerText,
+                document.getElementById('skm5').innerText,
+                document.getElementById('skm6').innerText,
+                document.getElementById('skm7').innerText,
+                document.getElementById('skm8').innerText,
+                document.getElementById('skm9').innerText,
+            ];
+
+            // Tulis nilai ke dalam tabel
+            printWindow.document.write('<tr><td>JUMLAH NILAI</td>');
+            jumlahValues.forEach(value => printWindow.document.write(`<td>${value}</td>`));
+            printWindow.document.write('</tr>');
+
+            printWindow.document.write('<tr><td>AVERAGE</td>');
+            averageValues.forEach(value => printWindow.document.write(`<td>${value}</td>`));
+            printWindow.document.write('</tr>');
+
+            printWindow.document.write('<tr><td>SKM</td>');
+            skmValues.forEach(value => printWindow.document.write(`<td>${value}</td>`));
+            printWindow.document.write('</tr>');
+
+            printWindow.document.write('</tbody></table>'); // Tutup body dan tabel
+
+            printWindow.document.write('</body></html>');
+            printWindow.document.close(); // Tutup dokumen
+            printWindow.print(); // Panggil fungsi print
+        }
+
+
+
+
+
+
+
+
+
+
+
+    
+        // Tampilkan semua data pada awalnya
+        displayData(evaluations);
+    </script>
+    
+
+</body>
+
+</html>
