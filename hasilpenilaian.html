@@ -155,6 +155,18 @@
                     <td id="skm8"></td>
                     <td id="skm9"></td>
                 </tr>
+                <tr class="tr">
+                    <td>KESIMPULAN</td>
+                    <td id="kes1"></td>
+                    <td id="kes2"></td>
+                    <td id="kes3"></td>
+                    <td id="kes4"></td>
+                    <td id="kes5"></td>
+                    <td id="kes6"></td>
+                    <td id="kes7"></td>
+                    <td id="kes8"></td>
+                    <td id="kes9"></td>
+                </tr>
             </tbody>
         </table>
     </div>
@@ -279,6 +291,10 @@
                 document.getElementById(`jumlah${i}`).innerText = totalScores[i - 1].toFixed();
                 document.getElementById(`average${i}`).innerText = averages[i - 1].toFixed(2);
                 document.getElementById(`skm${i}`).innerText = skms[i - 1].toFixed(2) + '%';
+
+                // Menentukan kesimpulan berdasarkan nilai rata-rata
+                const kesimpulan = averages[i - 1] > 2 ? "BAIK" : "BURUK";
+                document.getElementById(`kes${i}`).innerText = kesimpulan;
             }
         }
     

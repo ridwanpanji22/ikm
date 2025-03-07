@@ -25,6 +25,11 @@ body {
     letter-spacing: 2px;
 }
 
+.container {
+    padding-bottom: 50px; /* Tambah jarak bagian bawah */
+}
+
+
 /* Navbar */
 .navbar {
     background-color: #2c3e50;
