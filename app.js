@@ -124,7 +124,7 @@ app.post('/add-evaluation', (req, res) => {
 });
 
 app.get('/api/evaluations', (req, res) => {
-    const sql = 'SELECT * FROM evaluations'; // Ganti dengan query yang sesuai
+    const sql = 'SELECT * FROM evaluations ORDER BY date DESC'; // Ganti dengan query yang sesuai
     db.query(sql, (err, results) => {
         if (err) {
             return res.status(500).json({ error: err.message });

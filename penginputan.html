@@ -22,7 +22,7 @@
         <form id="evaluation-form">
             <div class="mb-3">
                 <label for="date" class="form-label">Tanggal</label>
-                <input type="date" class="form-control" id="date" required>
+                <input type="date" class="form-control" id="date" disabled required>
             </div>
             <div class="mb-3">
                 <label for="bidang" class="form-label">Bidang yang dituju</label>
@@ -348,6 +348,8 @@
                     scoreMapping[getCheckedValue('question9')]
                 ]
             };
+
+
  
             // Hitung total skor
             evaluation.totalScore = evaluation.scores.reduce((a, b) => a + b, 0);
@@ -385,6 +387,13 @@
                 window.location.href = 'pkl-login.html';
             }
         }
+    </script>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", function() {
+            let today = new Date().toISOString().split('T')[0];
+            document.getElementById('date').value = today;
+        });
     </script>
  
 
